@@ -3,14 +3,15 @@ from datetime import datetime
 from flask import Flask, redirect, render_template, request, session, url_for
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET", "h34dfuck")
+app.secret_key = os.getenv("SECRET", "tra1n#wr3ck")
 messages = []
 
 def add_message(username, message):
     """Add messages to the 'messages' list"""
     now = datetime.now().strftime("%H:%M:%S")
     messages.append({"timestamp": now, "from": username, "message": message})
-    
+
+
 @app.route('/', methods = ["GET", "POST"])
 def index():
     """Main page with instructions"""
@@ -36,4 +37,10 @@ def user(username):
     
     return render_template("chat.html", username = username, chat_messages = messages)
     
-app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', '5000')), debug=False)
+
+@app.route('/clear', methods=['POST'])
+def clear():
+    del messages[:]
+    return redirect(url_for("user", username=session["username"]))
+
+app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', '5000')), debug=True)

@@ -1,40 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Chat page for {{ username }}</title>
-</head>
-<body>
-    <h1>Welcome, {{ username }}</h1>
-    
-    <form method = "POST">
-        <textarea cols="50" rows ="4" name="message" id="message"></textarea>
-        <br>
-        <button>Send Message</button>
-    </form>
+{% extends 'base.html' %} {% block content %}
 
-    {% for message in chat_messages %}
-    <p>({{ message.timestamp }}) {{ message.from }}: {{ message.message }}</p>
-    {% endfor %}
+<div class="user-wrapper">
+    <div class="row">
+        <div class="col-md-5">
+            <h1>Welcome, {{ username }}</h1>
 
-    <script>
-        let textbox = document.getElementById("message")
-        
-        let timer = setTimeout(function() {
+            <form method="POST">
+                <textarea style="width: 90%;" rows="4" name="message" id="message"></textarea>
+                <br>
+                <button>Send Message</button>
+            </form>
+        </div>
+        <div class="col-md-7">
+            <h1>Chat History</h1>
+            <hr> {% for message in chat_messages %}
+            <p>({{ message.timestamp }}) {{ message.from }}: {{ message.message }}</p>
+            {% endfor %}
+            <hr>
+
+            <form action="{{ url_for('clear') }}" method='POST'>
+                <button>Clear Chat!</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    let textbox = document.getElementById("message");
+
+    let timer = setTimeout(function() {
+        location.reload();
+    }, 5000);
+
+    textbox.onkeydown = function(e) {
+        clearTimeout(timer);
+
+        timer = setTimeout(function() {
             location.reload();
         }, 5000);
-        
-        textbox.onkeydown = function(e) {
-            clearTimeout(timer)
-            
-            timer = setTimeout(function() {
-                location.reload();
-            }, 5000)
-        }
-        
-    </script>
+    };
+</script>
+<script>
+    // jQuery version - not using, keep for reference
+    // $('#clear_chat').click(function() {
+    //     $.ajax({
+    //         url: "{{ url_for('clear')}}",
+    //         method: 'POST'
+    //     });
+    // });
+</script>
 
-</body>
-</html>
+{% endblock %}
