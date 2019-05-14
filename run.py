@@ -42,5 +42,12 @@ def user(username):
 def clear():
     del messages[:]
     return redirect(url_for("user", username=session["username"]))
+    
+    
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('index'))
+    
 
 app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', '5000')), debug=True)
