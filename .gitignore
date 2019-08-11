@@ -1,1 +1,4 @@
 .c9
+env
+.vscode
+__pycache__
